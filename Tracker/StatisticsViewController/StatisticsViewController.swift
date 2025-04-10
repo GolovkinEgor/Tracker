@@ -7,24 +7,32 @@
 
 import UIKit
 
-
 final class StatisticsViewController: UIViewController {
+    private var titleLabel: UILabel = {
+        var label = UILabel()
+        label.text = "Статистика"
+        label.textColor = .black
+        label.font = .boldSystemFont(ofSize: 34)
+        return label
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
-        title = "Статистика"
-        
-        let placeholderLabel = UILabel()
-        placeholderLabel.text = "Здесь будет статистика"
-        placeholderLabel.textAlignment = .center
-        placeholderLabel.font = .systemFont(ofSize: 18, weight: .medium)
-        
-        view.addSubview(placeholderLabel)
-        placeholderLabel.translatesAutoresizingMaskIntoConstraints = false
-        
+        setupViews()
+        setupСonstraints()
+    }
+    
+    private func setupViews() {
+        [titleLabel].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            view.addSubview($0)
+        }
+    }
+    
+    private func setupСonstraints(){
         NSLayoutConstraint.activate([
-            placeholderLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            placeholderLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 88),
+            titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16)
         ])
     }
 }
