@@ -204,16 +204,16 @@ final class TrackersViewController: UIViewController, UICollectionViewDelegate {
         
         let layout = UICollectionViewFlowLayout()
         
-        let sideInset: CGFloat = 16 // отступ слева
-        let numberOfColumns: CGFloat = 2 // количество колонок
-        let cellSpacing: CGFloat = 9 // расстояние между колонками
-        let totalSpacing = cellSpacing + 2 * sideInset // общее количество отступов
+        let sideInset: CGFloat = 16
+        let numberOfColumns: CGFloat = 2
+        let cellSpacing: CGFloat = 9
+        let totalSpacing = cellSpacing + 2 * sideInset
         
-        let cellWidth = (view.frame.width - totalSpacing) / numberOfColumns // ширина колонки
+        let cellWidth = (view.frame.width - totalSpacing) / numberOfColumns
         
         layout.itemSize = CGSize(width: cellWidth, height: 148)
-        layout.minimumInteritemSpacing = cellSpacing  // Расстояние между столбцами
-        layout.minimumLineSpacing = 0      // Расстояние между строками
+        layout.minimumInteritemSpacing = cellSpacing
+        layout.minimumLineSpacing = 0
         layout.headerReferenceSize = CGSize(width: view.frame.width, height: 40)
         
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
@@ -388,7 +388,7 @@ extension TrackersViewController: TrackerCellDelegate {
         }
     }
     
-    func checkDate() -> Bool { //проверка, что трекер не будет отмечен как выполненный будущим числом
+    func checkDate() -> Bool { 
         if datePicker.date > Date() {
             return false
         } else {

@@ -43,7 +43,7 @@ let daysOfWeek: [String] = [
     "Воскресенье"
 ]
 
-// Словарь для сокращённых названий
+
 let shortDayNames: [String: String] = [
     "Понедельник": "Пн",
     "Вторник": "Вт",

@@ -17,11 +17,11 @@ class TrackerCell: UICollectionViewCell {
     var emojiLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.font = UIFont.systemFont(ofSize: 16) // Размер шрифта
+        label.font = UIFont.systemFont(ofSize: 16)
         label.frame = CGRect(x: 0, y: 0, width: 24, height: 24)
-        label.backgroundColor = UIColor.white.withAlphaComponent(0.3) // Полупрозрачный фон
-        label.layer.cornerRadius = 12// Делаем круг
-        label.layer.masksToBounds = true // Обрезаем по границам
+        label.backgroundColor = UIColor.white.withAlphaComponent(0.3)
+        label.layer.cornerRadius = 12
+        label.layer.masksToBounds = true 
         return label
     }()
     

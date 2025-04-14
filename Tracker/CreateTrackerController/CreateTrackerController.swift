@@ -85,7 +85,7 @@ final class CreateTrackerController: UIViewController {
     }()
     
     private let tableView = UITableView()
-    private var options = ["Категория"] // список строк для tableView
+    private var options = ["Категория"]
     
     private var needSchedule: Bool = false
     private var nameIsEmpty: Bool = true
@@ -149,7 +149,7 @@ final class CreateTrackerController: UIViewController {
         
         tableView.frame = view.bounds
         tableView.rowHeight = 80
-        //tableView.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        
         tableView.separatorStyle = .none
         view.addSubview(tableView)
     }
@@ -259,7 +259,7 @@ extension CreateTrackerController: UITableViewDataSource {
         cell.layer.masksToBounds = true
         cell.layer.cornerRadius = 16
         
-        // закругление ячеек
+        
         if options.count == 1 {
             cell.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner, .layerMinXMaxYCorner, .layerMaxXMaxYCorner]
             cell.hideSeparator(true)
