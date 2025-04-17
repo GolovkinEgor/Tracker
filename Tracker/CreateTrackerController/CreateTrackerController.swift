@@ -155,21 +155,12 @@ final class CreateTrackerController: UIViewController {
     }
     
     private func checkFilling() {
-        var fillingIsCorrect = false
         let nameIsFilled = !(nameNewTracker.text?.isEmpty ?? true)
         let categoryIsFilled = selectedCategory != ""
-        let scheduleIsFilled = selectedDays.count > 0
-        
-        if needSchedule {
-            fillingIsCorrect = !nameIsEmpty && nameIsFilled && categoryIsFilled && scheduleIsFilled
-        } else {
-            fillingIsCorrect = !nameIsEmpty && nameIsFilled && categoryIsFilled
-        }
-        if fillingIsCorrect {
-            createButton.isEnabled = true
-        } else {
-            createButton.isEnabled = false
-        }
+        let scheduleIsFilled = needSchedule ? selectedDays.count > 0 : true // Для нерегулярных событий проверка расписания не требуется
+
+        let fillingIsCorrect = nameIsFilled && categoryIsFilled && scheduleIsFilled
+        createButton.isEnabled = fillingIsCorrect
     }
     
     private func setupViews() {
@@ -215,15 +206,17 @@ final class CreateTrackerController: UIViewController {
     // MARK: - Public methods
     
     func createTracker() -> TrackerCategory {
-        let days = ScheduleItems.allCases.compactMap {
+        let days: [ScheduleItems]? = needSchedule ? ScheduleItems.allCases.compactMap {
             item in
             self.selectedDays.contains(item.rawValue) ? item : nil
-        }
+        } : nil // Для нерегулярных событий расписание должно быть nil
         
-        let tracker = Tracker(name: nameNewTracker.text ?? "Новый трекер",
-                              emoji: selectedEmoji,
-                              schedule: days,
-                              color: selectedColor)
+        let tracker = Tracker(
+            name: nameNewTracker.text ?? "Новый трекер",
+            emoji: selectedEmoji,
+            schedule: days, // Теперь schedule может быть nil
+            color: selectedColor
+        )
         let category = TrackerCategory(name: selectedCategory, trackers: [tracker])
         return category
     }

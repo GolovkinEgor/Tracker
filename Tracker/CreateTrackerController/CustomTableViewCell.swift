@@ -42,7 +42,7 @@ class CustomTableViewCell: UITableViewCell {
     
     let separatorView: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor.castomGray // Цвет разделителя
+        view.backgroundColor = UIColor.castomGray
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -68,10 +68,10 @@ class CustomTableViewCell: UITableViewCell {
             
             stackView.trailingAnchor.constraint(equalTo: customImageView.leadingAnchor, constant: -8),
             
-            separatorView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16), // Отступ слева
-            separatorView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16), // Отступ справа
+            separatorView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            separatorView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             separatorView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            separatorView.heightAnchor.constraint(equalToConstant: 0.5) // Высота разделителя
+            separatorView.heightAnchor.constraint(equalToConstant: 0.5) 
                   
         ])
     }

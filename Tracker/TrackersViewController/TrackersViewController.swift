@@ -179,7 +179,7 @@ final class TrackersViewController: UIViewController, UICollectionViewDelegate {
             let trackers = category.trackers.filter { tracker in
                 let textCondition = filterText.isEmpty ||
                 tracker.name.lowercased().contains(filterText)
-                let dateCondition = tracker.schedule?.contains { weekDay in
+                let dateCondition = tracker.schedule == nil || tracker.schedule?.contains { weekDay in
                     weekDay.rawValue == filterWeekDay
                 } == true
                 return textCondition && dateCondition
@@ -199,21 +199,20 @@ final class TrackersViewController: UIViewController, UICollectionViewDelegate {
         }
         collectionView.reloadData()
     }
-    
     private func setupCollectionView() {
         
         let layout = UICollectionViewFlowLayout()
         
-        let sideInset: CGFloat = 16
-        let numberOfColumns: CGFloat = 2
-        let cellSpacing: CGFloat = 9
-        let totalSpacing = cellSpacing + 2 * sideInset
+        let sideInset: CGFloat = 16 // отступ слева
+        let numberOfColumns: CGFloat = 2 // количество колонок
+        let cellSpacing: CGFloat = 9 // расстояние между колонками
+        let totalSpacing = cellSpacing + 2 * sideInset // общее количество отступов
         
-        let cellWidth = (view.frame.width - totalSpacing) / numberOfColumns
+        let cellWidth = (view.frame.width - totalSpacing) / numberOfColumns // ширина колонки
         
         layout.itemSize = CGSize(width: cellWidth, height: 148)
-        layout.minimumInteritemSpacing = cellSpacing
-        layout.minimumLineSpacing = 0
+        layout.minimumInteritemSpacing = cellSpacing  // Расстояние между столбцами
+        layout.minimumLineSpacing = 0      // Расстояние между строками
         layout.headerReferenceSize = CGSize(width: view.frame.width, height: 40)
         
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
@@ -372,7 +371,6 @@ extension TrackersViewController: CreateTrackerProtocol {
         }
         categories = newCategories
         updateFilteredTrackers()
-        //collectionView.reloadData()
     }
 }
 
@@ -388,7 +386,7 @@ extension TrackersViewController: TrackerCellDelegate {
         }
     }
     
-    func checkDate() -> Bool { 
+    func checkDate() -> Bool { //проверка, что трекер не будет отмечен как выполненный будущим числом
         if datePicker.date > Date() {
             return false
         } else {
