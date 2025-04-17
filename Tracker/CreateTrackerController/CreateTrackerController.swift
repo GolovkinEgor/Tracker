@@ -209,13 +209,14 @@ final class CreateTrackerController: UIViewController {
         let days: [ScheduleItems]? = needSchedule ? ScheduleItems.allCases.compactMap {
             item in
             self.selectedDays.contains(item.rawValue) ? item : nil
-        } : nil // Для нерегулярных событий расписание должно быть nil
-        
+        } : nil // Для нерегулярных событий schedule = nil
+
         let tracker = Tracker(
             name: nameNewTracker.text ?? "Новый трекер",
             emoji: selectedEmoji,
-            schedule: days, // Теперь schedule может быть nil
-            color: selectedColor
+            schedule: days,
+            color: selectedColor,
+            creationDate: Date() // Записываем текущую дату
         )
         let category = TrackerCategory(name: selectedCategory, trackers: [tracker])
         return category

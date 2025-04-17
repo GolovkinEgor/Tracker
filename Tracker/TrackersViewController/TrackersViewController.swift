@@ -99,21 +99,21 @@ final class TrackersViewController: UIViewController, UICollectionViewDelegate {
         name: "Утренняя пробежка",
         emoji: "🏃‍♂️",
         schedule: [.Monday, .Wednesday, .Friday],
-        color: .castomOrange
+        color: .castomOrange, creationDate: Date()
     )
     
     private let tracker2 = Tracker(
         name: "Чтение книги",
         emoji: "📚",
         schedule: [.Monday, .Tuesday, .Wednesday, .Thursday, .Friday],
-        color: .castomGreen
+        color: .castomGreen, creationDate: Date()
     )
     
     private let tracker3 = Tracker(
         name: "Медитация",
         emoji: "🧘‍♀️",
         schedule: [.Saturday, .Sunday],
-        color: .castomRed
+        color: .castomRed, creationDate: Date()
     )
     
     private lazy var categories: [TrackerCategory] = [
@@ -177,13 +177,23 @@ final class TrackersViewController: UIViewController, UICollectionViewDelegate {
         
         visibleCategories = categories.compactMap { category in
             let trackers = category.trackers.filter { tracker in
-                let textCondition = filterText.isEmpty ||
-                tracker.name.lowercased().contains(filterText)
-                let dateCondition = tracker.schedule == nil || tracker.schedule?.contains { weekDay in
-                    weekDay.rawValue == filterWeekDay
-                } == true
-                return textCondition && dateCondition
+                let textCondition = filterText.isEmpty || tracker.name.lowercased().contains(filterText)
+                
+                // --- Начало вставки (пункт 4) ---
+                if tracker.schedule == nil {
+                    // Для нерегулярных событий: показываем только в день создания
+                    let isSameDay = Calendar.current.isDate(currentDate, inSameDayAs: tracker.creationDate)
+                    return textCondition && isSameDay
+                } else {
+                    // Для привычек: проверяем расписание
+                    let dateCondition = tracker.schedule?.contains { weekDay in
+                        weekDay.rawValue == filterWeekDay
+                    } == true
+                    return textCondition && dateCondition
+                }
+                // --- Конец вставки ---
             }
+            
             if trackers.isEmpty {
                 return nil
             }
@@ -192,6 +202,7 @@ final class TrackersViewController: UIViewController, UICollectionViewDelegate {
                 trackers: trackers
             )
         }
+        
         if visibleCategories.isEmpty {
             setupNoTrackersImage(emptySearch: true)
         } else {

@@ -23,6 +23,7 @@ struct Tracker: Identifiable {
     let emoji: String
     let schedule: [ScheduleItems]?
     let color: UIColor
+    let creationDate: Date 
 }
 struct TrackerCategory {
     let name: String
