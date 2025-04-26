@@ -1,0 +1,29 @@
+func addNewTracker(_ tracker: Tracker, category: String) throws {
+    try performSync { context in
+        Result {
+            let trackerCoreData = TrackerCD(context: context)
+            trackerCoreData.id = tracker.id
+            trackerCoreData.name = tracker.name
+            trackerCoreData.emoji = tracker.emoji
+            trackerCoreData.color = tracker.color
+            
+            if let schedule = tracker.schedule, !schedule.isEmpty {
+                let daysSchedule = schedule.map { $0.rawValue }.joined(separator: ",")
+                trackerCoreData.schedule = daysSchedule
+            } else {
+                // Используем дату, выбранную пользователем
+                let formatter = DateFormatter()
+                formatter.dateFormat = "yyyy-MM-dd"
+                let dateString = formatter.string(from: tracker.createdDate)
+                trackerCoreData.schedule = "ONCE_\(dateString)"
+            }
+
+            do {
+                try trackerCategoryStore.addNewTrackerCategory(trackerCoreData, category: category)
+                try context.save()
+            } catch {
+                print("[TrackerStore - addNewTracker()] Ошибка при создании трекера: \(error), \(error.localizedDescription)")
+            }
+        }
+    }
+}

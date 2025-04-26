@@ -120,7 +120,7 @@ extension DataProvider: DataProviderProtocol {
         }
     }
     
-    func filteredTrackers(date: Date, title: String?){
+    func filteredTrackers(date: Date, title: String?) {
         let calendar = Calendar.current
         var numberWeekDay = calendar.component(.weekday, from: date)
         if numberWeekDay == 1 {
@@ -129,27 +129,35 @@ extension DataProvider: DataProviderProtocol {
             numberWeekDay -= 2
         }
         let filterWeekDay = daysOfWeek[numberWeekDay]
-        
-        var predicate = NSPredicate(format: "schedule CONTAINS[cd] %@", filterWeekDay)
-        
+
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        let onceDateString = "ONCE_\(formatter.string(from: date))"
+
+        var predicates: [NSPredicate] = [
+            NSPredicate(format: "schedule CONTAINS[cd] %@ OR schedule CONTAINS[cd] %@", filterWeekDay, onceDateString)
+        ]
+
         if let title = title, !title.isEmpty {
-            let filterText = title.lowercased()
-            predicate = NSPredicate(format: "schedule CONTAINS[cd] %@ AND name CONTAINS[cd] %@", filterWeekDay, filterText)
+            predicates.append(NSPredicate(format: "name CONTAINS[cd] %@", title))
         }
-        
+
+        let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+
         NSFetchedResultsController<TrackerCD>.deleteCache(withName: fetchedResultsController.cacheName)
-        
-        fetchedResultsController.fetchRequest.predicate = predicate
+        fetchedResultsController.fetchRequest.predicate = compoundPredicate
+
         do {
             try fetchedResultsController.performFetch()
             DispatchQueue.main.async {
                 self.delegate?.reloadCollectionView()
             }
-        }
-        catch {
+        } catch {
             print("[DataProvider - filteredTrackers()] Ошибка при фильтрации: \(error.localizedDescription)")
         }
     }
+
+
 }
 
 // MARK: - NSFetchedResultsControllerDelegate

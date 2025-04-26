@@ -101,7 +101,7 @@ final class CreateTrackerController: UIViewController {
     }()
     
     private let tableView = UITableView()
-    private var options = ["Категория"] // список строк для tableView
+    private var options = ["Категория"] 
     
     private let emojis: [String] = ["🙂","😻","🌺","🐶","❤️","😱",
                                     "😇","😡","🥶","🤔","🙌","🍔",
@@ -347,7 +347,7 @@ final class CreateTrackerController: UIViewController {
         let tracker = Tracker(name: nameNewTracker.text ?? "Новый трекер",
                               emoji: selectedEmoji,
                               schedule: !selectedDays.isEmpty ? days : nil,
-                              color: selectedColor, creationDate: Date())
+                              color: selectedColor, createdDate: Date())
         let category = TrackerCategory(name: selectedCategory, trackers: [tracker])
         return category
     }

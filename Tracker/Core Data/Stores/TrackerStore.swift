@@ -45,24 +45,22 @@ final class TrackerStore: TrackerDataStore {
                 trackerCoreData.emoji = tracker.emoji
                 trackerCoreData.color = tracker.color
                 
-                if ((tracker.schedule?.isEmpty) != nil){
-                    var daysSchedule: String = ""
-                    for day in tracker.schedule ?? [] {
-                        daysSchedule += day.rawValue + ","
-                    }
+                if let schedule = tracker.schedule, !schedule.isEmpty {
+                    let daysSchedule = schedule.map { $0.rawValue }.joined(separator: ",")
                     trackerCoreData.schedule = daysSchedule
                 } else {
-                    trackerCoreData.schedule = nil
+                    let formatter = DateFormatter()
+                    formatter.dateFormat = "yyyy-MM-dd"
+                    let dateString = formatter.string(from: tracker.createdDate)
+                    trackerCoreData.schedule = "ONCE_\(dateString)"
                 }
-                do {
-                    try trackerCategoryStore.addNewTrackerCategory(trackerCoreData, category: category)
-                    try context.save()
-                } catch {
-                    print("[TrackerStore - addNewTracker()] Ошибка при создании трекера:: \(error), \(error.localizedDescription)")
-                }
+                
+                try trackerCategoryStore.addNewTrackerCategory(trackerCoreData, category: category)
+                try context.save()
             }
         }
     }
+    
     
     var managedObjectContext: NSManagedObjectContext? {
         context
@@ -71,5 +69,5 @@ final class TrackerStore: TrackerDataStore {
     func delete(_ record: NSManagedObject) throws {
         //TODO: доделать функцию для удаления
     }
+    
 }
-

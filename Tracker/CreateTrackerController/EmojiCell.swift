@@ -24,7 +24,7 @@ final class EmojiCell: UICollectionViewCell {
             emojiLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             emojiLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
         ])
-        backgroundView = UIView() // Добавляем backgroundView для выделения
+        backgroundView = UIView() 
     }
 
     required init?(coder: NSCoder) {
