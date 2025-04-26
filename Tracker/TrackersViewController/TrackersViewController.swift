@@ -187,7 +187,7 @@ final class TrackersViewController: UIViewController, UICollectionViewDelegate{
         ])
     }
     private func setupPlaceholderImage(emptySearch:Bool){
-        guard(dataProvider != nil) else{return}
+        guard dataProvider != nil else{return}
         if dataProvider?.numberOfSections ?? 0>0{
             hideEmptyStub()
         } else {

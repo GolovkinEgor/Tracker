@@ -5,7 +5,7 @@
 //  Created by Golovkin Egor on 23.04.2025.
 //
 
-import UIKit
+import Foundation
 import CoreData
 
 struct TrackerStoreUpdate {

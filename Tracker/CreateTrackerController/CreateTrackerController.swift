@@ -467,11 +467,7 @@ extension CreateTrackerController: ScheduleViewControllerDelegate {
 
 extension CreateTrackerController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if collectionView == emojisCollectionView {
-            return emojis.count
-        } else {
-            return colors.count
-        }
+        collectionView == emojisCollectionView ? emojis.count : colors.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
