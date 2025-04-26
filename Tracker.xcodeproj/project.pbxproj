@@ -34,6 +34,7 @@
 		B7E15DFC2DB8FA85004B4488 /* TrackerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7E15DFB2DB8FA85004B4488 /* TrackerStore.swift */; };
 		B7E15DFE2DB8FA9D004B4488 /* TrackerRecordStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7E15DFD2DB8FA9D004B4488 /* TrackerRecordStore.swift */; };
 		B7E15E002DB8FAB0004B4488 /* TrackerCategoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7E15DFF2DB8FAB0004B4488 /* TrackerCategoryStore.swift */; };
+		B7E15E1D2DB907B6004B4488 /* DataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7E15E1C2DB907B6004B4488 /* DataProvider.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -85,6 +86,7 @@
 		B7E15DFB2DB8FA85004B4488 /* TrackerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerStore.swift; sourceTree = "<group>"; };
 		B7E15DFD2DB8FA9D004B4488 /* TrackerRecordStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerRecordStore.swift; sourceTree = "<group>"; };
 		B7E15DFF2DB8FAB0004B4488 /* TrackerCategoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCategoryStore.swift; sourceTree = "<group>"; };
+		B7E15E1C2DB907B6004B4488 /* DataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataProvider.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -120,7 +122,6 @@
 				B7B163C82DA829EB002E4EFE /* CustomTableViewCell.swift */,
 				B7B163CA2DA82A0F002E4EFE /* CreateTrackerController.swift */,
 				B7B163CC2DA82A22002E4EFE /* CreateTrackerProtocol.swift */,
-				B7B163D02DA82A56002E4EFE /* SheduleViewController */,
 			);
 			path = CreateTrackerController;
 			sourceTree = "<group>";
@@ -165,6 +166,7 @@
 		B7CEBE112D8ECFB200CBE766 /* Tracker */ = {
 			isa = PBXGroup;
 			children = (
+				B7B163D02DA82A56002E4EFE /* SheduleViewController */,
 				B7E15DF92DB8FA39004B4488 /* Core Data */,
 				B7B163C72DA82746002E4EFE /* CreateTrackerController */,
 				B7CEBEAD2DA1374800CBE766 /* Models */,
@@ -231,6 +233,7 @@
 			children = (
 				B7E15DFA2DB8FA57004B4488 /* Stores */,
 				B7C334762DB7898700C51ABF /* Tracker.xcdatamodeld */,
+				B7E15E1C2DB907B6004B4488 /* DataProvider.swift */,
 			);
 			path = "Core Data";
 			sourceTree = "<group>";
@@ -384,6 +387,7 @@
 				B7CEBE132D8ECFB200CBE766 /* AppDelegate.swift in Sources */,
 				B7CEBE482D95C5E100CBE766 /* TabBarController.swift in Sources */,
 				B7B163D92DA82B20002E4EFE /* TrackerCell.swift in Sources */,
+				B7E15E1D2DB907B6004B4488 /* DataProvider.swift in Sources */,
 				B7CEBE152D8ECFB200CBE766 /* SceneDelegate.swift in Sources */,
 				B7B163D52DA82AD1002E4EFE /* ScheduleViewControllerDelegate.swift in Sources */,
 				B7B163CB2DA82A0F002E4EFE /* CreateTrackerController.swift in Sources */,
