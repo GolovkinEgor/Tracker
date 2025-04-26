@@ -101,7 +101,7 @@ extension DataProvider: DataProviderProtocol {
     func nameSection(_ section: Int) -> String? {
         fetchedResultsController.sections?[section].name
     }
-
+    
     func addTracker(_ record: Tracker, category: String) throws {
         do {
             try dataStore.addNewTracker(record, category: category)
@@ -129,24 +129,24 @@ extension DataProvider: DataProviderProtocol {
             numberWeekDay -= 2
         }
         let filterWeekDay = daysOfWeek[numberWeekDay]
-
+        
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
         let onceDateString = "ONCE_\(formatter.string(from: date))"
-
+        
         var predicates: [NSPredicate] = [
             NSPredicate(format: "schedule CONTAINS[cd] %@ OR schedule CONTAINS[cd] %@", filterWeekDay, onceDateString)
         ]
-
+        
         if let title = title, !title.isEmpty {
             predicates.append(NSPredicate(format: "name CONTAINS[cd] %@", title))
         }
-
+        
         let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
-
+        
         NSFetchedResultsController<TrackerCD>.deleteCache(withName: fetchedResultsController.cacheName)
         fetchedResultsController.fetchRequest.predicate = compoundPredicate
-
+        
         do {
             try fetchedResultsController.performFetch()
             DispatchQueue.main.async {
@@ -156,8 +156,6 @@ extension DataProvider: DataProviderProtocol {
             print("[DataProvider - filteredTrackers()] Ошибка при фильтрации: \(error.localizedDescription)")
         }
     }
-
-
 }
 
 // MARK: - NSFetchedResultsControllerDelegate

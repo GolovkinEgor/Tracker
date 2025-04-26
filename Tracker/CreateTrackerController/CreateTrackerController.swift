@@ -52,7 +52,7 @@ final class CreateTrackerController: UIViewController {
         textField.leftViewMode = .always
         textField.borderStyle = .none
         textField.layer.cornerRadius = 16
-        textField.backgroundColor = .castomGrayBackground
+        textField.backgroundColor = .customGrayBackground
         textField.clearButtonMode = .whileEditing
         return textField
     }()
@@ -75,10 +75,10 @@ final class CreateTrackerController: UIViewController {
     
     private lazy var createButton: UIButton = {
         var button = UIButton(type: .system)
-        button.backgroundColor = .castomGray
+        button.backgroundColor = .customGray
         button.tintColor = .white
         button.layer.cornerRadius = 16
-        button.layer.borderColor = UIColor.castomGray.cgColor
+        button.layer.borderColor = UIColor.customGray.cgColor
         button.layer.borderWidth = 1
         button.setTitle("Создать", for: .normal)
         button.isEnabled = false
@@ -148,7 +148,7 @@ final class CreateTrackerController: UIViewController {
         return scrollView
     }()
     
-    private let contentVieww: UIView = {
+    private let contentView: UIView = {
         let contentView = UIView()
         contentView.translatesAutoresizingMaskIntoConstraints = false
         return contentView
@@ -188,8 +188,8 @@ final class CreateTrackerController: UIViewController {
         let heightcolorsCollectionView = colorsCollectionView.contentSize.height
         colorsCollectionView.heightAnchor.constraint(equalToConstant: heightcolorsCollectionView).isActive = true
         
-        contentVieww.layoutIfNeeded()
-        scrollView.contentSize = CGSize(width: contentVieww.bounds.width, height: contentVieww.bounds.height + 60)
+        contentView.layoutIfNeeded()
+        scrollView.contentSize = CGSize(width: contentView.bounds.width, height: contentView.bounds.height + 60)
     }
     
     init(needSchedule: Bool) {
@@ -247,8 +247,8 @@ final class CreateTrackerController: UIViewController {
         }
         if fillingIsCorrect {
             createButton.isEnabled = true
-            createButton.backgroundColor = .castomBlack
-            createButton.layer.borderColor = UIColor.castomBlack.cgColor
+            createButton.backgroundColor = .customBlack
+            createButton.layer.borderColor = UIColor.customBlack.cgColor
         } else {
             createButton.isEnabled = false
         }
@@ -259,16 +259,16 @@ final class CreateTrackerController: UIViewController {
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
         view.addSubview(scrollView)
-        scrollView.addSubview(contentVieww)
-        contentVieww.addSubview(titleLabel)
-        contentVieww.addSubview(nameNewTracker)
-        contentVieww.addSubview(tableView)
-        contentVieww.addSubview(limitLabel)
-        contentVieww.addSubview(emojiLabel)
-        contentVieww.addSubview(colorLabel)
-        contentVieww.addSubview(emojisCollectionView)
-        contentVieww.addSubview(colorsCollectionView)
-        contentVieww.addSubview(stackView)
+        scrollView.addSubview(contentView)
+        contentView.addSubview(titleLabel)
+        contentView.addSubview(nameNewTracker)
+        contentView.addSubview(tableView)
+        contentView.addSubview(limitLabel)
+        contentView.addSubview(emojiLabel)
+        contentView.addSubview(colorLabel)
+        contentView.addSubview(emojisCollectionView)
+        contentView.addSubview(colorsCollectionView)
+        contentView.addSubview(stackView)
         
         stackView.addArrangedSubview(cancelButton)
         stackView.addArrangedSubview(createButton)
@@ -285,50 +285,50 @@ final class CreateTrackerController: UIViewController {
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             
-            contentVieww.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            contentVieww.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-            contentVieww.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-            contentVieww.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-            contentVieww.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
             
-            titleLabel.topAnchor.constraint(equalTo: contentVieww.topAnchor, constant: 24),
-            titleLabel.centerXAnchor.constraint(equalTo: contentVieww.centerXAnchor),
+            titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 24),
+            titleLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             titleLabel.heightAnchor.constraint(equalToConstant: 32),
             
             nameNewTracker.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 24),
-            nameNewTracker.leadingAnchor.constraint(equalTo: contentVieww.leadingAnchor, constant: 16),
-            nameNewTracker.trailingAnchor.constraint(equalTo: contentVieww.trailingAnchor, constant: -16),
+            nameNewTracker.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            nameNewTracker.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             nameNewTracker.heightAnchor.constraint(equalToConstant: 75),
             
             limitLabel.topAnchor.constraint(equalTo: nameNewTracker.bottomAnchor, constant: 8),
             limitLabel.centerXAnchor.constraint(equalTo: nameNewTracker.centerXAnchor),
             
-            tableView.leadingAnchor.constraint(equalTo: contentVieww.leadingAnchor, constant: 16),
-            tableView.trailingAnchor.constraint(equalTo: contentVieww.trailingAnchor, constant: -16),
+            tableView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            tableView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             tableView.heightAnchor.constraint(equalToConstant: tableHeight),
             
             emojiLabel.topAnchor.constraint(equalTo: tableView.bottomAnchor, constant: 28),
-            emojiLabel.leadingAnchor.constraint(equalTo: contentVieww.leadingAnchor, constant: 28),
+            emojiLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 28),
             emojiLabel.heightAnchor.constraint(equalToConstant: 18),
             
             emojisCollectionView.topAnchor.constraint(equalTo: emojiLabel.bottomAnchor, constant: 12),
-            emojisCollectionView.leadingAnchor.constraint(equalTo: contentVieww.leadingAnchor, constant: 16),
-            emojisCollectionView.trailingAnchor.constraint(equalTo: contentVieww.trailingAnchor, constant: -16),
+            emojisCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            emojisCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             
             colorLabel.topAnchor.constraint(equalTo: emojisCollectionView.bottomAnchor, constant: 16),
-            colorLabel.leadingAnchor.constraint(equalTo: contentVieww.leadingAnchor, constant: 28),
+            colorLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 28),
             colorLabel.heightAnchor.constraint(equalToConstant: 18),
             
             colorsCollectionView.topAnchor.constraint(equalTo: colorLabel.bottomAnchor, constant: 12),
-            colorsCollectionView.leadingAnchor.constraint(equalTo: contentVieww.leadingAnchor, constant: 16),
-            colorsCollectionView.trailingAnchor.constraint(equalTo: contentVieww.trailingAnchor, constant: -16),
+            colorsCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            colorsCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             
             stackView.topAnchor.constraint(equalTo: colorsCollectionView.bottomAnchor, constant: 12),
-            stackView.leadingAnchor.constraint(equalTo: contentVieww.leadingAnchor, constant: 20),
-            stackView.centerXAnchor.constraint(equalTo: contentVieww.centerXAnchor),
+            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            stackView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             stackView.heightAnchor.constraint(equalToConstant: 60),
-            stackView.trailingAnchor.constraint(equalTo: contentVieww.trailingAnchor, constant: -20),
-            stackView.bottomAnchor.constraint(equalTo: contentVieww.bottomAnchor, constant: 0)
+            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 0)
         ])
         
         tableViewTopConstraint = tableView.topAnchor.constraint(equalTo: nameNewTracker.bottomAnchor, constant: 24)
@@ -380,7 +380,7 @@ extension CreateTrackerController: UITableViewDataSource {
                 cell.detailLabel.text = shortDays
             }
         }
-        cell.backgroundColor = .castomGrayBackground
+        cell.backgroundColor = .customGrayBackground
         
         cell.layer.masksToBounds = true
         cell.layer.cornerRadius = 16
@@ -481,7 +481,7 @@ extension CreateTrackerController: UICollectionViewDataSource {
             else { return UICollectionViewCell() }
             cell.emojiLabel.text = emojis[indexPath.item]
             if indexPath == selectedEmojiIndexPath {
-                cell.backgroundView?.backgroundColor = .castomGraySelecledEmoji
+                cell.backgroundView?.backgroundColor = .customGraySelecledEmoji
                 cell.backgroundView?.layer.cornerRadius = 16
             } else {
                 cell.backgroundView?.backgroundColor = .clear

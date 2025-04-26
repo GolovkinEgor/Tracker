@@ -26,7 +26,7 @@ final class TrackersViewController: UIViewController, UICollectionViewDelegate{
         label.textAlignment = .center
         label.font = UIFont.systemFont(ofSize: 17)
         label.textColor = .black
-        label.backgroundColor = .castomGrayDatePicker
+        label.backgroundColor = .customGrayDatePicker
         label.layer.cornerRadius = 8
         label.layer.masksToBounds = true
         return label
@@ -304,7 +304,7 @@ extension TrackersViewController: UICollectionViewDataSource {
             cell.completeButton.backgroundColor = trackerColor
         }
         let countRecords = trackerRecordStore.amountOfRecords(for: trackerId)
-        cell.daysCountLabel.text = cell.daysString(amoumnt: countRecords)
+        cell.daysCountLabel.text = cell.daysString(amount: countRecords)
         
         cell.delegate = self
         return cell
