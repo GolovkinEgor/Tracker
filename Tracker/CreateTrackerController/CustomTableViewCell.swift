@@ -19,7 +19,7 @@ class CustomTableViewCell: UITableViewCell {
     let detailLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = .castomGray
+        label.textColor = .customGray
         return label
     }()
     
@@ -42,7 +42,7 @@ class CustomTableViewCell: UITableViewCell {
     
     let separatorView: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor.castomGray
+        view.backgroundColor = UIColor.customGray
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
