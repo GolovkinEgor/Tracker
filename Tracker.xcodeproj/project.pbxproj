@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B71852D52DCE27E200F39038 /* OnboardingPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B71852D42DCE27E200F39038 /* OnboardingPage.swift */; };
+		B71852D72DCE280100F39038 /* PageContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B71852D62DCE280100F39038 /* PageContentViewController.swift */; };
+		B71852D92DCE285000F39038 /* OnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B71852D82DCE285000F39038 /* OnboardingViewController.swift */; };
 		B7B163C92DA829EB002E4EFE /* CustomTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7B163C82DA829EB002E4EFE /* CustomTableViewCell.swift */; };
 		B7B163CB2DA82A0F002E4EFE /* CreateTrackerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7B163CA2DA82A0F002E4EFE /* CreateTrackerController.swift */; };
 		B7B163CD2DA82A22002E4EFE /* CreateTrackerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7B163CC2DA82A22002E4EFE /* CreateTrackerProtocol.swift */; };
@@ -55,6 +58,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B71852D42DCE27E200F39038 /* OnboardingPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingPage.swift; sourceTree = "<group>"; };
+		B71852D62DCE280100F39038 /* PageContentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageContentViewController.swift; sourceTree = "<group>"; };
+		B71852D82DCE285000F39038 /* OnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewController.swift; sourceTree = "<group>"; };
 		B7B163C82DA829EB002E4EFE /* CustomTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTableViewCell.swift; sourceTree = "<group>"; };
 		B7B163CA2DA82A0F002E4EFE /* CreateTrackerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTrackerController.swift; sourceTree = "<group>"; };
 		B7B163CC2DA82A22002E4EFE /* CreateTrackerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTrackerProtocol.swift; sourceTree = "<group>"; };
@@ -114,6 +120,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B71852D32DCE27CF00F39038 /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				B71852D42DCE27E200F39038 /* OnboardingPage.swift */,
+				B71852D62DCE280100F39038 /* PageContentViewController.swift */,
+				B71852D82DCE285000F39038 /* OnboardingViewController.swift */,
+			);
+			path = Onboarding;
+			sourceTree = "<group>";
+		};
 		B7B163C72DA82746002E4EFE /* CreateTrackerController */ = {
 			isa = PBXGroup;
 			children = (
@@ -166,6 +182,7 @@
 		B7CEBE112D8ECFB200CBE766 /* Tracker */ = {
 			isa = PBXGroup;
 			children = (
+				B71852D32DCE27CF00F39038 /* Onboarding */,
 				B7B163D02DA82A56002E4EFE /* SheduleViewController */,
 				B7E15DF92DB8FA39004B4488 /* Core Data */,
 				B7B163C72DA82746002E4EFE /* CreateTrackerController */,
@@ -385,12 +402,15 @@
 				B7B163CD2DA82A22002E4EFE /* CreateTrackerProtocol.swift in Sources */,
 				B7CEBE172D8ECFB200CBE766 /* ViewController.swift in Sources */,
 				B7CEBE132D8ECFB200CBE766 /* AppDelegate.swift in Sources */,
+				B71852D72DCE280100F39038 /* PageContentViewController.swift in Sources */,
 				B7CEBE482D95C5E100CBE766 /* TabBarController.swift in Sources */,
 				B7B163D92DA82B20002E4EFE /* TrackerCell.swift in Sources */,
 				B7E15E1D2DB907B6004B4488 /* DataProvider.swift in Sources */,
 				B7CEBE152D8ECFB200CBE766 /* SceneDelegate.swift in Sources */,
 				B7B163D52DA82AD1002E4EFE /* ScheduleViewControllerDelegate.swift in Sources */,
+				B71852D92DCE285000F39038 /* OnboardingViewController.swift in Sources */,
 				B7B163CB2DA82A0F002E4EFE /* CreateTrackerController.swift in Sources */,
+				B71852D52DCE27E200F39038 /* OnboardingPage.swift in Sources */,
 				B7B163C92DA829EB002E4EFE /* CustomTableViewCell.swift in Sources */,
 				B7CEBEAF2DA1375A00CBE766 /* Models.swift in Sources */,
 				B7E15E002DB8FAB0004B4488 /* TrackerCategoryStore.swift in Sources */,
