@@ -144,10 +144,10 @@ class TrackerCell: UICollectionViewCell {
     }
 
     private func updateDayCounterLabel(dayAmount: Int) {
-        daysCountLabel.text = daysString(amoumnt: dayAmount)
+        daysCountLabel.text = daysString(amount: dayAmount)
     }
     
-    func daysString(amoumnt dayAmount: Int) -> String {
+    func daysString(amount dayAmount: Int) -> String {
         let lastDigit = dayAmount % 10
         let lastTwoDigits = dayAmount % 100
         

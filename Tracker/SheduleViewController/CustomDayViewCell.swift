@@ -29,7 +29,7 @@ final class CustomDayViewCell: UITableViewCell {
     }
     
     private func setupViews() {
-        toggleSwitch.onTintColor = .castomBlue
+        toggleSwitch.onTintColor = .customBlue
         
         contentView.addSubview(dayLabel)
         contentView.addSubview(toggleSwitch)
