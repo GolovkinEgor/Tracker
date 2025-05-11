@@ -99,11 +99,24 @@ final class SelectTrackerTypeController: UIViewController {
     }
     
     private func openCreateTrackerVC(needSchedule: Bool) {
+        // 1. Создаём экран для создания трекера
         let createTrackerVC = CreateTrackerController(needSchedule: needSchedule)
-        if let tabBarController = self.view.window?.rootViewController as? TabBarController {
-            guard let trackerViewController = tabBarController.viewControllers?.first as? TrackersViewController else { return }
-            createTrackerVC.createTrackerDelegate = trackerViewController
-            present(createTrackerVC, animated: true, completion: nil)
+
+        // 2. Находим ваш TabBarController и в нём первый контроллер — TrackersViewController
+        if let tabBar = view.window?.rootViewController as? TabBarController,
+           let trackersVC = tabBar.viewControllers?.first as? TrackersViewController {
+            
+            // 3. Назначаем замыкание, чтобы после создания трекера вызвать addTracker(for:)
+            createTrackerVC.onCreateTracker = { category in
+                trackersVC.addTracker(for: category)
+            }
+            
+            // 4. Оборачиваем в UINavigationController и показываем модально
+            let nav = UINavigationController(rootViewController: createTrackerVC)
+            nav.modalPresentationStyle = .fullScreen
+            present(nav, animated: true, completion: nil)
         }
     }
+
+
 }
