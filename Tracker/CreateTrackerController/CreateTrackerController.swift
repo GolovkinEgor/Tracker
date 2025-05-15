@@ -8,6 +8,8 @@ import UIKit
 
 final class CreateTrackerController: UIViewController {
     
+    var onCreateTracker: ((TrackerCategory) -> Void)?
+
     // MARK: - Private properties
     
     private lazy var titleLabel: UILabel = {
@@ -101,7 +103,7 @@ final class CreateTrackerController: UIViewController {
     }()
     
     private let tableView = UITableView()
-    private var options = ["Категория"] 
+    private var options = ["Категория"]
     
     private let emojis: [String] = ["🙂","😻","🌺","🐶","❤️","😱",
                                     "😇","😡","🥶","🤔","🙌","🍔",
@@ -157,7 +159,7 @@ final class CreateTrackerController: UIViewController {
     private var needSchedule: Bool = false
     private var nameIsEmpty: Bool = true
     
-    private var selectedCategory: String = "Важное"
+    private var selectedCategory: String?
     private var selectedEmoji: String = ""
     private var selectedColor: UIColor = .clear
     private var selectedDays: [String] = []
@@ -211,10 +213,16 @@ final class CreateTrackerController: UIViewController {
     }
     
     @objc func didTapCreateButton() {
-        let data = createTracker()
-        createTrackerDelegate?.addTracker(for: data)
-        createTrackerDelegate?.cancelCreateTracker()
+        
+        let newCategory = createTracker()
+        
+        // 2. Передаём результат наружу через замыкание
+        onCreateTracker?(newCategory)
+        
+        // 3. Закрываем экран
+        dismiss(animated: true, completion: nil)
     }
+
     
     @objc func didTapCategoryButton() {
         checkFilling()
@@ -336,21 +344,47 @@ final class CreateTrackerController: UIViewController {
     }
     
     private func createTracker() -> TrackerCategory {
+        // 1. Собираем расписание
         var days: [ScheduleItems] = []
-        
         if !selectedDays.isEmpty {
-            days = ScheduleItems.allCases.compactMap {
-                item in
+            days = ScheduleItems.allCases.compactMap { item in
                 self.selectedDays.contains(item.rawValue) ? item : nil
             }
         }
-        let tracker = Tracker(name: nameNewTracker.text ?? "Новый трекер",
-                              emoji: selectedEmoji,
-                              schedule: !selectedDays.isEmpty ? days : nil,
-                              color: selectedColor, createdDate: Date())
-        let category = TrackerCategory(name: selectedCategory, trackers: [tracker])
-        return category
+
+        // 2. Проверяем, что пользователь выбрал категорию
+        //    Если нет — показываем алерт и подставляем дефолт
+        let categoryName: String
+        if let sel = selectedCategory, !sel.isEmpty {
+            categoryName = sel
+        } else {
+            let alert = UIAlertController(
+                title: "Ошибка",
+                message: "Пожалуйста, выберите категорию",
+                preferredStyle: .alert
+            )
+            alert.addAction(.init(title: "OK", style: .default))
+            present(alert, animated: true)
+            categoryName = "Без категории"
+        }
+
+        // 3. Создаём сам Tracker
+        let tracker = Tracker(
+            name: nameNewTracker.text ?? "Новый трекер",
+            emoji: selectedEmoji,
+            // если дней нет — передаём nil
+            schedule: days.isEmpty ? nil : days,
+            color: selectedColor,
+            createdDate: Date()
+        )
+
+        // 4. Оборачиваем его в категорию и возвращаем
+        return TrackerCategory(
+            name: categoryName,
+            trackers: [tracker]
+        )
     }
+
 }
 
 // MARK: - UITableViewDataSource
@@ -404,7 +438,16 @@ extension CreateTrackerController: UITableViewDataSource {
 
 extension CreateTrackerController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if options[indexPath.row] == "Расписание" {
+        let option = options[indexPath.row]
+        if option == "Категория" {
+            let vc = CategoryListViewController()
+            vc.onCategorySelected = { [weak self] cat in
+                self?.selectedCategory = cat.name
+                tableView.reloadRows(at: [indexPath], with: .none)
+            }
+            navigationController?.pushViewController(vc, animated: true)
+        }
+        else if options[indexPath.row] == "Расписание" {
             let scheduleVC = ScheduleViewController(data: selectedDays)
             scheduleVC.selectScheduleDelegate = self
             present(scheduleVC, animated: true, completion: nil)
