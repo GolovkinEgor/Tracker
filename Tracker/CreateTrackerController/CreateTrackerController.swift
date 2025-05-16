@@ -14,7 +14,7 @@ final class CreateTrackerController: UIViewController {
     
     private lazy var titleLabel: UILabel = {
         var label = UILabel()
-        label.text = needSchedule ? "Новая привычка" : "Новое нерегулярное событие"
+        label.text = needSchedule ? NSLocalizedString("create_habit_title", comment: "Заголовок: новая привычка"): NSLocalizedString("create_event_title", comment: "Заголовок: событие")
         label.textColor = .black
         label.font = .systemFont(ofSize: 16)
         return label
@@ -49,7 +49,7 @@ final class CreateTrackerController: UIViewController {
     
     private lazy var nameNewTracker: UITextField = {
         var textField = UITextField()
-        textField.placeholder = "Введите название трекера"
+        textField.placeholder = NSLocalizedString("name_placeholder", comment: "")
         textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 0))
         textField.leftViewMode = .always
         textField.borderStyle = .none
@@ -66,7 +66,7 @@ final class CreateTrackerController: UIViewController {
         button.layer.cornerRadius = 16
         button.layer.borderColor = UIColor.red.cgColor
         button.layer.borderWidth = 1
-        button.setTitle("Отменить", for: .normal)
+        button.setTitle(NSLocalizedString("cancel_button", comment: ""), for: .normal)
         button.addTarget(
             self,
             action: #selector(didTapCancelButton),
@@ -82,7 +82,7 @@ final class CreateTrackerController: UIViewController {
         button.layer.cornerRadius = 16
         button.layer.borderColor = UIColor.customGray.cgColor
         button.layer.borderWidth = 1
-        button.setTitle("Создать", for: .normal)
+        button.setTitle(NSLocalizedString("create_button", comment: ""), for: .normal)
         button.isEnabled = false
         button.addTarget(
             self,
@@ -103,7 +103,7 @@ final class CreateTrackerController: UIViewController {
     }()
     
     private let tableView = UITableView()
-    private var options = ["Категория"]
+    private var options = [NSLocalizedString("option_category", comment: "Опция «Категория»")]
     
     private let emojis: [String] = ["🙂","😻","🌺","🐶","❤️","😱",
                                     "😇","😡","🥶","🤔","🙌","🍔",
@@ -404,11 +404,11 @@ extension CreateTrackerController: UITableViewDataSource {
         cell.customImageView.image = UIImage(named: "chevron" )
         cell.customImageView.tintColor = .systemGray
         
-        if options[indexPath.row] == "Категория" {
+        if options[indexPath.row] == NSLocalizedString("option_category", comment: "") {
             cell.detailLabel.text = selectedCategory
         } else {
             if selectedDays.count == 7 {
-                cell.detailLabel.text = "Каждый день"
+                cell.detailLabel.text = NSLocalizedString("every_day", comment: "")
             } else {
                 let shortDays = selectedDays.compactMap { shortDayNames[$0] }.joined(separator: ", ")
                 cell.detailLabel.text = shortDays

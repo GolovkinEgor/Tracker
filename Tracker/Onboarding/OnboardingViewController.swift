@@ -15,7 +15,7 @@ class OnboardingViewController: UIViewController {
     lazy var button: UIButton = {
         let button = UIButton()
         button.backgroundColor = .customBlack
-        button.setTitle("Вот это технологии!", for: .normal)
+        button.setTitle(NSLocalizedString("onboarding_button", comment: "Текст кнопки на онбординге"),for: .normal)
         
         button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
         button.titleLabel?.textColor = .white

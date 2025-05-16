@@ -1,0 +1,34 @@
+/* CreateTrackerController */
+"create_habit_title"       = "Новая привычка";
+"create_event_title"       = "Новое нерегулярное событие";
+"cancel_button"            = "Отмена";
+"save_button"              = "Создать";
+
+"option_category"          = "Категория";
+"option_schedule"          = "Расписание";
+"placeholder_new_tracker"  = "Новый трекер";
+"error_choose_category"    = "Пожалуйста, выберите категорию";
+"fallback_category"        = "Без категории";
+
+/* CategoryList */
+"category_list_title"      = "Категории";
+"alert_ok"                 = "OK";
+"alert_error_title"        = "Ошибка";
+
+/* ScheduleViewController */
+"schedule_title"           = "Расписание";
+"schedule_done_button"     = "Готово";
+
+/* TrackersViewController */
+"trackers_title"           = "Трекеры";
+"search_placeholder"       = "Поиск";
+"search_cancel"            = "Отменить";
+"no_results"               = "Ничего не найдено";
+"empty_stub"               = "Что будем отслеживать?";
+
+/* Onboarding */
+"onboarding_next"          = "Далее";
+"onboarding_start"         = "Начать";
+"onboarding_button"    = "Вот это технологии!";
+"onboarding_page1_desc" = "Отслеживайте только то, что вы хотите";
+"onboarding_page2_desc" = "Даже если это не литры воды и йога";

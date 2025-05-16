@@ -17,7 +17,7 @@ final class SelectTrackerTypeController: UIViewController {
         button.backgroundColor = .black
         button.tintColor = .white
         button.layer.cornerRadius = 16
-        button.setTitle("Привычка", for: .normal)
+        button.setTitle(NSLocalizedString("habit_button", comment: ""), for: .normal)
         
         button.addTarget(
             self,
@@ -32,7 +32,7 @@ final class SelectTrackerTypeController: UIViewController {
         button.backgroundColor = .black
         button.tintColor = .white
         button.layer.cornerRadius = 16
-        button.setTitle("Нерегулярное событие", for: .normal)
+        button.setTitle(NSLocalizedString("event_button", comment: ""), for: .normal)
         
         button.addTarget(
             self,
@@ -44,7 +44,7 @@ final class SelectTrackerTypeController: UIViewController {
     
     private let titleLabel: UILabel = {
         var label = UILabel()
-        label.text = "Создание трекера"
+        label.text = NSLocalizedString("select_tracker_title", comment: "")
         label.textColor = .black
         label.font = .systemFont(ofSize: 16)
         return label

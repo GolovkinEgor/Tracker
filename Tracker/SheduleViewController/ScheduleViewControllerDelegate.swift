@@ -16,7 +16,7 @@ final class ScheduleViewController: UIViewController {
     
     private let titleLabel: UILabel = {
         var label = UILabel()
-        label.text = "Расписание"
+        label.text = NSLocalizedString("schedule_title", comment: "")
         label.textColor = .black
         label.font = .systemFont(ofSize: 16)
         return label
@@ -27,7 +27,7 @@ final class ScheduleViewController: UIViewController {
         button.backgroundColor = .black
         button.tintColor = .white
         button.layer.cornerRadius = 16
-        button.setTitle("Готово", for: .normal)
+        button.setTitle(NSLocalizedString("schedule_done_button", comment: ""), for: .normal)
         
         button.addTarget(
             self,

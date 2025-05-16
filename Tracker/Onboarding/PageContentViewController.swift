@@ -11,8 +11,8 @@ import UIKit
 final class OnboardingPageViewController: UIPageViewController {
     
     private lazy var pages: [OnboardingViewController] = {
-        let pageBlue = OnboardingViewController(imageName: "onboarding1Illustration", descriptionLabel: "Отслеживайте только то, что вы хотите")
-        let pageRed = OnboardingViewController(imageName: "onboarding2Illustration", descriptionLabel: "Даже если это не литры воды и йога")
+        let pageBlue = OnboardingViewController(imageName: "onboarding1Illustration", descriptionLabel: NSLocalizedString("onboarding_page1_desc", comment: "Описание первого экрана онбординга"))
+        let pageRed = OnboardingViewController(imageName: "onboarding2Illustration", descriptionLabel: NSLocalizedString("onboarding_page2_desc", comment: "Описание второго экрана онбординга"))
         
         pageBlue.button.addTarget(self, action: #selector(finishOnboarding), for: .touchUpInside)
         pageRed.button.addTarget(self, action: #selector(finishOnboarding), for: .touchUpInside)

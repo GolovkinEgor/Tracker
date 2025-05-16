@@ -8,7 +8,7 @@ final class CategoryListViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Категории"
+        title = NSLocalizedString("category_list_title", comment: "")
         view.backgroundColor = .white
 
         // Регистрируем класс ячейки с идентификатором "Cell"
@@ -35,11 +35,11 @@ final class CategoryListViewController: UIViewController {
         }
         viewModel.onError = { [weak self] error in
             let alert = UIAlertController(
-                title: "Ошибка",
+                title: NSLocalizedString("alert_error_title", comment: ""),
                 message: error.localizedDescription,
                 preferredStyle: .alert
             )
-            alert.addAction(.init(title: "OK", style: .default))
+            alert.addAction(.init(title: NSLocalizedString("alert_ok", comment: ""), style: .default))
             self?.present(alert, animated: true)
         }
     }

@@ -66,9 +66,9 @@ final class TrackersViewController: UIViewController, UICollectionViewDelegate{
     
     private lazy var searchBar: UISearchBar = {
         let sBar = UISearchBar()
-        sBar.placeholder = "Поиск"
+        sBar.placeholder = NSLocalizedString("search_placeholder", comment: "")
         sBar.translatesAutoresizingMaskIntoConstraints = false
-        sBar.setValue("Отменить", forKey: "cancelButtonText")
+        sBar.setValue(NSLocalizedString("search_cancel", comment: ""), forKey: "cancelButtonText")
         if let textField = sBar.value(forKey: "searchField") as? UITextField {
             textField.clearButtonMode = .never
         }
@@ -202,10 +202,10 @@ final class TrackersViewController: UIViewController, UICollectionViewDelegate{
         
         if emptySearch {
             noTrackersImage.image  = UIImage(named: "emptySearchImage")
-            noTrackersLabel.text = "Ничего не найдено"
+            noTrackersLabel.text = NSLocalizedString("no_results", comment: "")
         } else {
             noTrackersImage.image  = UIImage(named: "noTrackersImage")
-            noTrackersLabel.text = "Что будем отслеживать?"
+            noTrackersLabel.text = NSLocalizedString("empty_stub", comment: "")
         }
         
         [noTrackersImage, noTrackersLabel].forEach {
