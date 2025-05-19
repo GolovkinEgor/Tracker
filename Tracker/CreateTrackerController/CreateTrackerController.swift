@@ -375,7 +375,8 @@ final class CreateTrackerController: UIViewController {
             // если дней нет — передаём nil
             schedule: days.isEmpty ? nil : days,
             color: selectedColor,
-            createdDate: Date()
+            createdDate: Date(),
+            isPinned: false
         )
 
         // 4. Оборачиваем его в категорию и возвращаем

@@ -28,6 +28,7 @@ protocol DataProviderProtocol {
     func addTracker(_ record: Tracker, category: String) throws
     func deleteTracker(at indexPath: IndexPath) throws
     func filteredTrackers(date: Date, title: String?)
+    
 }
 
 // MARK: - DataProvider
@@ -69,6 +70,46 @@ final class DataProvider: NSObject {
         return fetchedResultsController
     }()
     
+    // Все трекеры, прошедшие текущий фильтр (по дате и названию)
+    private var fetchedTrackers: [TrackerCD] {
+      fetchedResultsController.fetchedObjects ?? []
+    }
+
+    /// Собирает массив секций: если есть закреплённые — первая секция "Закреплённые",
+    /// затем все остальные трекеры по категориям
+    private var sectionsData: [(title: String, trackers: [TrackerCD])] {
+      // 1) Взять все закреплённые
+      let pinned = fetchedTrackers.filter { $0.isPinned }
+
+      // 2) Остальные трекеры
+      let others = fetchedTrackers.filter { !$0.isPinned }
+
+      // 3) Группировка «остальных» по имени категории
+      let grouped: [String: [TrackerCD]] = Dictionary(
+        grouping: others,
+        by: { $0.categories?.name ?? "" }
+      )
+
+      // 4) Собираем финальный список секций
+      var result: [(String, [TrackerCD])] = []
+
+      // Если есть закреплённые, добавляем их первой секцией
+      if !pinned.isEmpty {
+        result.append(("Закреплённые", pinned))
+      }
+
+      // Теперь категории в алфавитном порядке
+      for categoryName in grouped.keys.sorted() {
+        if let list = grouped[categoryName] {
+          result.append((categoryName, list))
+        }
+      }
+
+      return result
+    }
+
+
+    
     init(_ dataStore: TrackerDataStore, delegate: DataProviderDelegate) throws {
         guard let context = dataStore.managedObjectContext else {
             throw DataProviderError.failedToInitializeContext
@@ -87,20 +128,20 @@ final class DataProvider: NSObject {
 extension DataProvider: DataProviderProtocol {
     
     var numberOfSections: Int {
-        fetchedResultsController.sections?.count ?? 0
-    }
-    
-    func numberOfItemsInSection(_ section: Int) -> Int {
-        fetchedResultsController.sections?[section].numberOfObjects ?? 0
-    }
-    
-    func object(at indexPath: IndexPath) -> TrackerCD? {
-        fetchedResultsController.object(at: indexPath)
-    }
-    
-    func nameSection(_ section: Int) -> String? {
-        fetchedResultsController.sections?[section].name
-    }
+           sectionsData.count
+       }
+
+       func numberOfItemsInSection(_ section: Int) -> Int {
+           sectionsData[section].trackers.count
+       }
+
+       func object(at indexPath: IndexPath) -> TrackerCD? {
+           sectionsData[indexPath.section].trackers[indexPath.item]
+       }
+
+       func nameSection(_ section: Int) -> String? {
+           sectionsData[section].title
+       }
     
     func addTracker(_ record: Tracker, category: String) throws {
         do {

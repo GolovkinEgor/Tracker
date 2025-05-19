@@ -30,6 +30,8 @@ final class CategoryListViewModel {
             }
         }
     }
+    
+    
 
     func numberOfRows() -> Int { categories.count }
     func category(at idx: Int) -> Category { categories[idx] }

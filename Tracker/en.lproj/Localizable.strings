@@ -3,6 +3,15 @@
 "create_event_title"       = "Новое нерегулярное событие";
 "cancel_button"            = "Отмена";
 "save_button"              = "Создать";
+/* Placeholder для ввода названия */
+"name_placeholder"       = "Введите название трекера";
+
+/* CreateTrackerController */
+"create_button"          = "Создать";
+"habit_button"           = "Привычка";
+"event_button"           = "Нерегулярное событие";
+"select_tracker_title"   = "Создание трекера";
+
 
 "option_category"          = "Категория";
 "option_schedule"          = "Расписание";

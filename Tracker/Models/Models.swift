@@ -24,6 +24,7 @@ struct Tracker: Identifiable {
     let schedule: [ScheduleItems]?
     let color: UIColor
     let createdDate: Date
+    var isPinned: Bool
 
 }
 struct TrackerCategory {

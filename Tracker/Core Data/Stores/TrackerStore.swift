@@ -14,9 +14,15 @@ protocol TrackerDataStore {
     func addNewTracker(_ tracker: Tracker, category: String) throws
     func delete(_ record: NSManagedObject) throws
 }
+extension Notification.Name {
+    // Уведомление о том, что список трекеров обновился
+    static let trackersDidUpdate = Notification.Name("trackersDidUpdate")
+}
 
 final class TrackerStore: TrackerDataStore {
-    
+    static let shared = TrackerStore()
+        
+    private var trackers: [Tracker] = []
     private let context: NSManagedObjectContext
     let trackerCategoryStore = TrackerCategoryStore()
     
@@ -72,5 +78,34 @@ final class TrackerStore: TrackerDataStore {
     func delete(_ record: NSManagedObject) throws {
         //TODO: доделать функцию для удаления
     }
+    /// Переключает состояние «закреплено» у переданного объекта TrackerCD в Core Data
+    func togglePin(_ trackerCD: TrackerCD) {
+            do {
+                _ = try performSync { context -> Result<Void, Error> in
+                    // Внутреннее do–catch, чтобы не «пробросить» ошибку наружу
+                    do {
+                        let request: NSFetchRequest<TrackerCD> = TrackerCD.fetchRequest()
+                        if let id = trackerCD.id {
+                            request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
+                        }
+                        let results = try context.fetch(request)
+                        if let cd = results.first {
+                            cd.isPinned.toggle()
+                            try context.save()
+                        }
+                        return .success(())
+                    } catch {
+                        return .failure(error)
+                    }
+                }
+            } catch {
+                print("❗️Ошибка togglePin в TrackerStore:", error)
+            }
+            // Уведомляем всех слушателей
+            NotificationCenter.default.post(name: .trackersDidUpdate, object: nil)
+        }
+
+
+    
     
 }

@@ -107,6 +107,27 @@ final class TrackersViewController: UIViewController, UICollectionViewDelegate{
             return nil
         }
     }()
+    private func showEditFlow(for tracker: TrackerCD) {
+            // TODO: запустить ваш экран редактирования
+            // Например:
+            // let vc = EditTrackerViewController(tracker: tracker)
+            // navigationController?.pushViewController(vc, animated: true)
+        }
+
+        // MARK: – Flow удаления привычки
+        private func showDeleteConfirmation(for tracker: TrackerCD) {
+            let alert = UIAlertController(
+                title: NSLocalizedString("delete_title", comment: "Удалить привычку"),
+                message: NSLocalizedString("delete_message", comment: "Вы уверены, что хотите удалить эту привычку?"),
+                preferredStyle: .alert
+            )
+            alert.addAction(.init(title: NSLocalizedString("cancel", comment: "Отмена"), style: .cancel))
+            alert.addAction(.init(title: NSLocalizedString("delete", comment: "Удалить"), style: .destructive) { _ in
+                // Здесь вызовите TrackerStore.shared.delete(...)
+                // и/или dataProvider?.delete(tracker: tracker)
+            })
+            present(alert, animated: true)
+        }
     
     
     // MARK: - Overrides Methods
@@ -125,6 +146,13 @@ final class TrackersViewController: UIViewController, UICollectionViewDelegate{
         
         
         setupPlaceholderImage(emptySearch: false)
+        
+        NotificationCenter.default.addObserver(
+                self,
+                selector: #selector(onTrackersUpdate),
+                name: .trackersDidUpdate,
+                object: nil
+            )
     }
     
     // MARK: - @objc Methods
@@ -138,6 +166,9 @@ final class TrackersViewController: UIViewController, UICollectionViewDelegate{
     @objc func didTapButton() {
         let selectTrackerVC = SelectTrackerTypeController()
         present(selectTrackerVC, animated: true, completion: nil)
+    }
+    @objc private func onTrackersUpdate() {
+        collectionView.reloadData()
     }
     
     // MARK: - Private Methods
@@ -262,6 +293,41 @@ final class TrackersViewController: UIViewController, UICollectionViewDelegate{
         
         view.bringSubviewToFront(dateLabel)
     }
+    
+    func collectionView(
+            _ collectionView: UICollectionView,
+            contextMenuConfigurationForItemAt indexPath: IndexPath,
+            point: CGPoint
+        ) -> UIContextMenuConfiguration? {
+            // Получаем Core Data-объект
+            guard let trackerCD = dataProvider?.object(at: indexPath) else { return nil }
+            
+            return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
+                // «Закрепить» / «Открепить»
+                let pinTitle = trackerCD.isPinned ? "Открепить" : "Закрепить"
+                let pinImage = UIImage(systemName: trackerCD.isPinned ? "pin.slash" : "pin")
+                let pinAction = UIAction(title: pinTitle, image: pinImage) { [weak self] _ in
+                    TrackerStore.shared.togglePin(trackerCD)
+                }
+
+                // «Редактировать»
+                let editAction = UIAction(title: "Редактировать", image: UIImage(systemName: "pencil")) { [weak self] _ in
+                    self?.showEditFlow(for: trackerCD)
+                }
+
+                // «Удалить»
+                let deleteAction = UIAction(
+                    title: "Удалить",
+                    image: UIImage(systemName: "trash"),
+                    attributes: .destructive
+                ) { [weak self] _ in
+                    self?.showDeleteConfirmation(for: trackerCD)
+                }
+
+                return UIMenu(title: "", children: [pinAction, editAction, deleteAction])
+            }
+        }
+
     
     
     
