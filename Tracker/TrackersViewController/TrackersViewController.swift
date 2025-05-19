@@ -116,7 +116,7 @@ final class TrackersViewController: UIViewController, UICollectionViewDelegate{
 
     
     
-    private var currentDate: Date = Date()
+    var currentDate: Date = Date()
     private var collectionView: UICollectionView!
     private let trackerStore = TrackerStore()
     private let trackerRecordStore = TrackerRecordStore()

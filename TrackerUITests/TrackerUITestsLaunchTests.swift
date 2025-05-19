@@ -2,7 +2,7 @@
 //  TrackerUITestsLaunchTests.swift
 //  TrackerUITests
 //
-//  Created by Golovkin Egor on 22.03.2025.
+//  Created by Golovkin Egor on 19.05.2025.
 //
 
 import XCTest
@@ -17,6 +17,7 @@ final class TrackerUITestsLaunchTests: XCTestCase {
         continueAfterFailure = false
     }
 
+    @MainActor
     func testLaunch() throws {
         let app = XCUIApplication()
         app.launch()
