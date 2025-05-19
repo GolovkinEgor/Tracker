@@ -29,12 +29,17 @@ protocol DataProviderProtocol {
     func deleteTracker(at indexPath: IndexPath) throws
     func filteredTrackers(date: Date, title: String?)
     
+    
+    func apply(filter: TrackerFilter, date: Date)
+    
+    
+    
 }
 
 // MARK: - DataProvider
 
 final class DataProvider: NSObject {
-
+    
     enum DataProviderError: Error {
         case failedToInitializeContext
     }
@@ -47,12 +52,44 @@ final class DataProvider: NSObject {
     private var deletedIndexes: [IndexPath]
     private var insertedSections: IndexSet
     private var deletedSections: IndexSet
-   
+    
     
     private var newSectionIndex: Int = 0
     
+    // Текущий выбранный фильтр
+    private var activeFilter: TrackerFilter = .all
+    
+    // Дата, по которой фильтруем
+    private var filteredDate: Date = Date()
+    
+    // Основное условие по расписанию/дате (ваш existing predicate)
+    private var baseDatePredicate: NSPredicate {
+        // 1. Вычисляем нужный день недели (0 = понедельник … 6 = воскресенье)
+        let calendar = Calendar.current
+        var weekday = calendar.component(.weekday, from: filteredDate)
+        // В вашей логике первый элемент daysOfWeek — понедельник
+        if weekday == 1 {
+            weekday = 6
+        } else {
+            weekday -= 2
+        }
+        let filterWeekDay = daysOfWeek[weekday]
+        
+        // 2. Строка «ONCE_yyyy-MM-dd»
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        let onceDateString = "ONCE_\(formatter.string(from: filteredDate))"
+        
+        // 3. Собираем и возвращаем предикат
+        return NSPredicate(
+            format: "schedule CONTAINS[cd] %@ OR schedule CONTAINS[cd] %@",
+            filterWeekDay,
+            onceDateString
+        )
+    }
+    
     private lazy var fetchedResultsController: NSFetchedResultsController<TrackerCD> = {
-
+        
         let fetchRequest = NSFetchRequest<TrackerCD>(entityName: "TrackerCD")
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "categories.name", ascending: true)]
         
@@ -61,7 +98,7 @@ final class DataProvider: NSObject {
                                                                   sectionNameKeyPath: "categories.name",
                                                                   cacheName: nil)
         fetchedResultsController.delegate = self
-       
+        
         do {
             try fetchedResultsController.performFetch()
         } catch {
@@ -72,43 +109,43 @@ final class DataProvider: NSObject {
     
     // Все трекеры, прошедшие текущий фильтр (по дате и названию)
     private var fetchedTrackers: [TrackerCD] {
-      fetchedResultsController.fetchedObjects ?? []
+        fetchedResultsController.fetchedObjects ?? []
     }
-
+    
     /// Собирает массив секций: если есть закреплённые — первая секция "Закреплённые",
     /// затем все остальные трекеры по категориям
     private var sectionsData: [(title: String, trackers: [TrackerCD])] {
-      // 1) Взять все закреплённые
-      let pinned = fetchedTrackers.filter { $0.isPinned }
-
-      // 2) Остальные трекеры
-      let others = fetchedTrackers.filter { !$0.isPinned }
-
-      // 3) Группировка «остальных» по имени категории
-      let grouped: [String: [TrackerCD]] = Dictionary(
-        grouping: others,
-        by: { $0.categories?.name ?? "" }
-      )
-
-      // 4) Собираем финальный список секций
-      var result: [(String, [TrackerCD])] = []
-
-      // Если есть закреплённые, добавляем их первой секцией
-      if !pinned.isEmpty {
-        result.append(("Закреплённые", pinned))
-      }
-
-      // Теперь категории в алфавитном порядке
-      for categoryName in grouped.keys.sorted() {
-        if let list = grouped[categoryName] {
-          result.append((categoryName, list))
+        // 1) Взять все закреплённые
+        let pinned = fetchedTrackers.filter { $0.isPinned }
+        
+        // 2) Остальные трекеры
+        let others = fetchedTrackers.filter { !$0.isPinned }
+        
+        // 3) Группировка «остальных» по имени категории
+        let grouped: [String: [TrackerCD]] = Dictionary(
+            grouping: others,
+            by: { $0.categories?.name ?? "" }
+        )
+        
+        // 4) Собираем финальный список секций
+        var result: [(String, [TrackerCD])] = []
+        
+        // Если есть закреплённые, добавляем их первой секцией
+        if !pinned.isEmpty {
+            result.append(("Закреплённые", pinned))
         }
-      }
-
-      return result
+        
+        // Теперь категории в алфавитном порядке
+        for categoryName in grouped.keys.sorted() {
+            if let list = grouped[categoryName] {
+                result.append((categoryName, list))
+            }
+        }
+        
+        return result
     }
-
-
+    
+    
     
     init(_ dataStore: TrackerDataStore, delegate: DataProviderDelegate) throws {
         guard let context = dataStore.managedObjectContext else {
@@ -127,21 +164,54 @@ final class DataProvider: NSObject {
 // MARK: - DataProviderProtocol
 extension DataProvider: DataProviderProtocol {
     
+    func apply(filter: TrackerFilter, date: Date) {
+        activeFilter = filter
+        filteredDate  = date
+        
+        // 1) Начальный предикат по дате
+        var predicates = [ baseDatePredicate ]
+        
+        // 2) Добавляем условие по выбранному фильтру
+        switch filter {
+        case .all, .today:
+            break
+        case .completed:
+            predicates.append(
+                NSPredicate(format: "ANY records.date == %@", filteredDate as CVarArg)
+            )
+        case .incomplete:
+            predicates.append(
+                NSPredicate(format: "NOT (ANY records.date == %@)", filteredDate as CVarArg)
+            )
+            
+            
+            // 3) Присваиваем FRC
+            fetchedResultsController.fetchRequest.predicate =
+            NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+            
+            // 4) Перезапрашиваем данные
+            try? fetchedResultsController.performFetch()
+            delegate?.reloadCollectionView()
+        }
+    }
+    
+    
+    
     var numberOfSections: Int {
-           sectionsData.count
-       }
-
-       func numberOfItemsInSection(_ section: Int) -> Int {
-           sectionsData[section].trackers.count
-       }
-
-       func object(at indexPath: IndexPath) -> TrackerCD? {
-           sectionsData[indexPath.section].trackers[indexPath.item]
-       }
-
-       func nameSection(_ section: Int) -> String? {
-           sectionsData[section].title
-       }
+        sectionsData.count
+    }
+    
+    func numberOfItemsInSection(_ section: Int) -> Int {
+        sectionsData[section].trackers.count
+    }
+    
+    func object(at indexPath: IndexPath) -> TrackerCD? {
+        sectionsData[indexPath.section].trackers[indexPath.item]
+    }
+    
+    func nameSection(_ section: Int) -> String? {
+        sectionsData[section].title
+    }
     
     func addTracker(_ record: Tracker, category: String) throws {
         do {
@@ -197,6 +267,7 @@ extension DataProvider: DataProviderProtocol {
             print("[DataProvider - filteredTrackers()] Ошибка при фильтрации: \(error.localizedDescription)")
         }
     }
+    
 }
 
 // MARK: - NSFetchedResultsControllerDelegate
@@ -208,14 +279,14 @@ extension DataProvider: NSFetchedResultsControllerDelegate {
         insertedSections = IndexSet()
         deletedSections = IndexSet()
     }
-
+    
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         delegate?.didUpdate(TrackerStoreUpdate(
-                insertedIndexes: insertedIndexes,
-                deletedIndexes: deletedIndexes,
-                insertedSections: insertedSections,
-                deletedSections: deletedSections
-            )
+            insertedIndexes: insertedIndexes,
+            deletedIndexes: deletedIndexes,
+            insertedSections: insertedSections,
+            deletedSections: deletedSections
+        )
         )
         insertedIndexes = []
         deletedIndexes = []

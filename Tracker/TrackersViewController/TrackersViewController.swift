@@ -91,12 +91,36 @@ final class TrackersViewController: UIViewController, UICollectionViewDelegate{
         label.font = .systemFont(ofSize: 12)
         return label
     }()
+    private let filterButton: UIButton = {
+        let btn = UIButton(type: .system)
+        btn.setTitle("Фильтры", for: .normal)
+        btn.titleLabel?.font = .systemFont(ofSize: 17, weight: .regular)
+        btn.setTitleColor(.white, for: .normal)
+        btn.titleLabel?.textAlignment = .center
+        btn.backgroundColor = .customBlue
+        btn.layer.cornerRadius = 16
+        btn.layer.masksToBounds = true
+        btn.contentEdgeInsets = UIEdgeInsets(top: 14, left: 20, bottom: 14, right: 20)
+        return btn
+    }()
+
+
+
+    private var currentFilter: TrackerFilter = .all {
+      didSet {
+        // визуальный сигнал: если фильтр не .all — красим кнопку в красный
+        let color: UIColor = currentFilter == .all ? .systemBlue : .systemRed
+        filterButton.setTitleColor(color, for: .normal)
+      }
+    }
+
+    
     
     private var currentDate: Date = Date()
     private var collectionView: UICollectionView!
     private let trackerStore = TrackerStore()
     private let trackerRecordStore = TrackerRecordStore()
-
+    
     private lazy var dataProvider: DataProviderProtocol? = {
         do {
             try dataProvider = DataProvider(trackerStore, delegate: self)
@@ -108,26 +132,26 @@ final class TrackersViewController: UIViewController, UICollectionViewDelegate{
         }
     }()
     private func showEditFlow(for tracker: TrackerCD) {
-            // TODO: запустить ваш экран редактирования
-            // Например:
-            // let vc = EditTrackerViewController(tracker: tracker)
-            // navigationController?.pushViewController(vc, animated: true)
-        }
-
-        // MARK: – Flow удаления привычки
-        private func showDeleteConfirmation(for tracker: TrackerCD) {
-            let alert = UIAlertController(
-                title: NSLocalizedString("delete_title", comment: "Удалить привычку"),
-                message: NSLocalizedString("delete_message", comment: "Вы уверены, что хотите удалить эту привычку?"),
-                preferredStyle: .alert
-            )
-            alert.addAction(.init(title: NSLocalizedString("cancel", comment: "Отмена"), style: .cancel))
-            alert.addAction(.init(title: NSLocalizedString("delete", comment: "Удалить"), style: .destructive) { _ in
-                // Здесь вызовите TrackerStore.shared.delete(...)
-                // и/или dataProvider?.delete(tracker: tracker)
-            })
-            present(alert, animated: true)
-        }
+        // TODO: запустить ваш экран редактирования
+        // Например:
+        // let vc = EditTrackerViewController(tracker: tracker)
+        // navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    // MARK: – Flow удаления привычки
+    private func showDeleteConfirmation(for tracker: TrackerCD) {
+        let alert = UIAlertController(
+            title: NSLocalizedString("delete_title", comment: "Удалить привычку"),
+            message: NSLocalizedString("delete_message", comment: "Вы уверены, что хотите удалить эту привычку?"),
+            preferredStyle: .alert
+        )
+        alert.addAction(.init(title: NSLocalizedString("cancel", comment: "Отмена"), style: .cancel))
+        alert.addAction(.init(title: NSLocalizedString("delete", comment: "Удалить"), style: .destructive) { _ in
+            // Здесь вызовите TrackerStore.shared.delete(...)
+            // и/или dataProvider?.delete(tracker: tracker)
+        })
+        present(alert, animated: true)
+    }
     
     
     // MARK: - Overrides Methods
@@ -142,17 +166,27 @@ final class TrackersViewController: UIViewController, UICollectionViewDelegate{
         
         setupDateLabel()
         setupCollectionView()
+        view.addSubview(filterButton)
+        filterButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            filterButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            filterButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16)
+        ])
+        filterButton.addTarget(self, action: #selector(didTapFilter), for: .touchUpInside)
+        
+        // Оставляем «опасное» пространство под кнопку, чтобы контент мог скроллиться выше неё
+        collectionView.contentInset.bottom = 80
         
         
         
         setupPlaceholderImage(emptySearch: false)
         
         NotificationCenter.default.addObserver(
-                self,
-                selector: #selector(onTrackersUpdate),
-                name: .trackersDidUpdate,
-                object: nil
-            )
+            self,
+            selector: #selector(onTrackersUpdate),
+            name: .trackersDidUpdate,
+            object: nil
+        )
     }
     
     // MARK: - @objc Methods
@@ -169,7 +203,17 @@ final class TrackersViewController: UIViewController, UICollectionViewDelegate{
     }
     @objc private func onTrackersUpdate() {
         collectionView.reloadData()
+        updateFilterButtonVisibility()
     }
+    @objc private func didTapFilter() {
+      let nav = UINavigationController(rootViewController: FilterViewController())
+      if let vc = nav.viewControllers.first as? FilterViewController {
+        vc.selectedFilter = currentFilter   // текущее сохранённое состояние
+        vc.delegate = self
+      }
+      present(nav, animated: true)
+    }
+
     
     // MARK: - Private Methods
     
@@ -253,9 +297,9 @@ final class TrackersViewController: UIViewController, UICollectionViewDelegate{
         ])
     }
     private func hideEmptyStub(){
-            noTrackersImage.isHidden = true
-            noTrackersLabel.isHidden = true
-        }
+        noTrackersImage.isHidden = true
+        noTrackersLabel.isHidden = true
+    }
     
     
     private func setupViews() {
@@ -271,7 +315,7 @@ final class TrackersViewController: UIViewController, UICollectionViewDelegate{
             plusButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 6),
             plusButton.heightAnchor.constraint(equalToConstant: 42),
             plusButton.widthAnchor.constraint(equalToConstant: 42),
-         
+            
             datePicker.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 5),
             datePicker.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
             datePicker.heightAnchor.constraint(equalToConstant: 34),
@@ -293,41 +337,50 @@ final class TrackersViewController: UIViewController, UICollectionViewDelegate{
         
         view.bringSubviewToFront(dateLabel)
     }
+    private func updateFilterButtonVisibility() {
+        // Считаем все элементы во всех секциях
+        var total = 0
+        for section in 0..<(dataProvider?.numberOfSections ?? 0) {
+            total += dataProvider?.numberOfItemsInSection(section) ?? 0
+        }
+        // Скрываем кнопку, если нет ни одного трекера
+        filterButton.isHidden = (total == 0)
+    }
     
     func collectionView(
-            _ collectionView: UICollectionView,
-            contextMenuConfigurationForItemAt indexPath: IndexPath,
-            point: CGPoint
-        ) -> UIContextMenuConfiguration? {
-            // Получаем Core Data-объект
-            guard let trackerCD = dataProvider?.object(at: indexPath) else { return nil }
-            
-            return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
-                // «Закрепить» / «Открепить»
-                let pinTitle = trackerCD.isPinned ? "Открепить" : "Закрепить"
-                let pinImage = UIImage(systemName: trackerCD.isPinned ? "pin.slash" : "pin")
-                let pinAction = UIAction(title: pinTitle, image: pinImage) { [weak self] _ in
-                    TrackerStore.shared.togglePin(trackerCD)
-                }
-
-                // «Редактировать»
-                let editAction = UIAction(title: "Редактировать", image: UIImage(systemName: "pencil")) { [weak self] _ in
-                    self?.showEditFlow(for: trackerCD)
-                }
-
-                // «Удалить»
-                let deleteAction = UIAction(
-                    title: "Удалить",
-                    image: UIImage(systemName: "trash"),
-                    attributes: .destructive
-                ) { [weak self] _ in
-                    self?.showDeleteConfirmation(for: trackerCD)
-                }
-
-                return UIMenu(title: "", children: [pinAction, editAction, deleteAction])
+        _ collectionView: UICollectionView,
+        contextMenuConfigurationForItemAt indexPath: IndexPath,
+        point: CGPoint
+    ) -> UIContextMenuConfiguration? {
+        // Получаем Core Data-объект
+        guard let trackerCD = dataProvider?.object(at: indexPath) else { return nil }
+        
+        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
+            // «Закрепить» / «Открепить»
+            let pinTitle = trackerCD.isPinned ? "Открепить" : "Закрепить"
+            let pinImage = UIImage(systemName: trackerCD.isPinned ? "pin.slash" : "pin")
+            let pinAction = UIAction(title: pinTitle, image: pinImage) { [weak self] _ in
+                TrackerStore.shared.togglePin(trackerCD)
             }
+            
+            // «Редактировать»
+            let editAction = UIAction(title: "Редактировать", image: UIImage(systemName: "pencil")) { [weak self] _ in
+                self?.showEditFlow(for: trackerCD)
+            }
+            
+            // «Удалить»
+            let deleteAction = UIAction(
+                title: "Удалить",
+                image: UIImage(systemName: "trash"),
+                attributes: .destructive
+            ) { [weak self] _ in
+                self?.showDeleteConfirmation(for: trackerCD)
+            }
+            
+            return UIMenu(title: "", children: [pinAction, editAction, deleteAction])
         }
-
+    }
+    
     
     
     
@@ -466,13 +519,34 @@ extension TrackersViewController: DataProviderDelegate {
     func reloadCollectionView() {
         DispatchQueue.main.async {
             self.collectionView.reloadData()
+            self.updateFilterButtonVisibility()
         }
     }
     
     func didUpdate(_ update: TrackerStoreUpdate) {
         
         collectionView.reloadData()
+        updateFilterButtonVisibility()
         setupPlaceholderImage(emptySearch: false)
         
     }
 }
+extension TrackersViewController: FilterViewControllerDelegate {
+  func filterViewController(_ vc: UIViewController, didSelect filter: TrackerFilter) {
+    // 1. Сохраняем состояние фильтра
+    currentFilter = filter
+
+    // 2. Закрываем модалку и сразу применяем новый фильтр
+    vc.dismiss(animated: true) { [weak self] in
+      guard let self = self else { return }
+      // Применяем фильтр и текущую дату через DataProvider
+      self.dataProvider?.apply(filter: self.currentFilter, date: self.currentDate)
+
+      // 3. Пряча/показываем кнопку «Фильтры» и заглушку, если нужно
+      self.updateFilterButtonVisibility()
+      self.setupPlaceholderImage(emptySearch: true)
+    }
+  }
+}
+
+
